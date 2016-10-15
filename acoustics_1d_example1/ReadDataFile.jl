@@ -1,6 +1,6 @@
 module ReadDataFile
 
-export Reader, readstr, readraw, readbool, readint, readflt, close
+export Reader, readstr, readbool, readint, readflt, readintarray, readfltarray, close_reader
 
 type Reader
        
@@ -13,7 +13,7 @@ type Reader
     function Reader(fname::String)
         istream = open(fname, "r")
         r = new(fname,istream, "", 0)
-        finalizer(r, close)
+        finalizer(r, close_reader)
         return r
     end
 end
@@ -39,11 +39,6 @@ function readstr(r::Reader)
     return r.line
 end
 
-function readraw(r::Reader)
-    readln(r)
-    return split(r.line)
-end
-
 function readbool(r::Reader)
     readln(r)
     if r.line != "T" && r.line != "F"
@@ -55,17 +50,30 @@ end
 
 function readint(r::Reader)
     readln(r)
-    x::Int = parseint(r.line)
-    return x
+    return parse(Int,r.line)
 end
 
 function readflt(r::Reader)
     readln(r)
-    x::Float64 = parsefloat(r.line)
-    return x
+    return parse(Float64, r.line)
 end
 
-function close(r::Reader)
+function readraw(r::Reader)
+    readln(r)
+    return split(r.line)
+end
+
+function readarray(r::Reader, parser, len)
+    buf = readraw(r)
+    buflen = length(buf)
+    @assert(buflen == len)
+    return [parser(buf[i]) for i = 1:buflen]
+end
+
+readintarray(r::Reader, len::Int) = readarray(r, x -> parse(Int, x), len)
+readfltarray(r::Reader, len::Int) = readarray(r, x -> parse(Float64, x), len)
+
+function close_reader(r::Reader)
     Base.close(r.istream)
 end
 

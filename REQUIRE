@@ -1,2 +1,2 @@
-julia 0.2-
-FArrayMod
+julia 0.5-
+OffsetArrays

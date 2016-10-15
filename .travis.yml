@@ -13,5 +13,5 @@ before_install:
   - sudo apt-get update -qq -y
   - sudo apt-get install libpcre3-dev julia -y
 script:
-  - julia -e 'Pkg.init(); run(`ln -s $(pwd()) $(Pkg.dir("jlclaw"))`); Pkg.pin("jlclaw"); Pkg.resolve()'
-  - julia -e 'using jlclaw; @assert isdefined(:jlclaw); @assert typeof(jlclaw) === Module'
+  - julia -e 'Pkg.init(); run(`ln -s $(pwd()) $(Pkg.dir("Claw"))`); Pkg.pin("Claw"); Pkg.resolve()'
+  - julia -e 'using Claw; @assert isdefined(:Claw); @assert typeof(Claw) === Module'
