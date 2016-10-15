@@ -1,17 +1,11 @@
-language: cpp
-compiler:
-  - clang
+language: julia
+
+os:
+    - linux
+
 notifications:
-  email: false
-env:
-  matrix: 
-    - JULIAVERSION="juliareleases" 
-    - JULIAVERSION="julianightlies" 
-before_install:
-  - sudo add-apt-repository ppa:staticfloat/julia-deps -y
-  - sudo add-apt-repository ppa:staticfloat/${JULIAVERSION} -y
-  - sudo apt-get update -qq -y
-  - sudo apt-get install libpcre3-dev julia -y
+    email: false
+
 script:
-  - julia -e 'Pkg.init(); run(`ln -s $(pwd()) $(Pkg.dir("Claw.jl"))`); Pkg.pin("Claw.jl"); Pkg.resolve()'
-  - julia -e 'using Claw; @assert isdefined(:Claw); @assert typeof(Claw.jl) === Module'
+  - julia -e 'Pkg.init(); run(`ln -s $(pwd()) $(Pkg.dir("Claw"))`); Pkg.pin("Claw"); Pkg.resolve()'
+  - julia -e 'using Claw; @assert isdefined(:Claw); @assert typeof(Claw) === Module'
