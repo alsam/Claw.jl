@@ -43,6 +43,7 @@ function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::In
 
             # Construct dot products
             wnorm2 = norm(wave[range, mw,i], 2)
+            wnorm2 = wnorm2^2
             dotl = dotr[mw]
             dotr[mw] = dot(wave[range, mw,i], wave[range, mw,i+1])
 
