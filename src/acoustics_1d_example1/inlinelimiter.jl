@@ -24,18 +24,10 @@
 
 using OffsetArrays
 
-function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::Int, wave::OffsetArray{Float64}, s::OffsetArray{Float64}, mthlim::Array{Int,1})
-#
-#    # Arguments
-#    integer, intent(in) :: maxm, num_eqn, num_waves, num_ghost, mx
-#    real(kind=8), intent(in out) :: wave(num_eqn, num_waves, 1-num_ghost:maxm+num_ghost)
-#    real(kind=8), intent(in) :: s(num_waves, 1-num_ghost:maxm+num_ghost)
-#    integer, intent(in) :: mthlim(num_waves)
-#
-#    ! Local storage
-#    integer :: m, mw, i
-#    real(kind=8) :: r, c, wlimiter, wnorm2, dotl
-#    real(kind=8), dimension(num_waves) :: dotr
+function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::Int,
+                 wave::OffsetArray{Float64}, s::OffsetArray{Float64}, mthlim::Array{Int,1})
+
+    range::UnitRange = 1:num_eqn
     dotr = Array(Float64, num_waves)
 
     dotr[:] = 0.0
@@ -50,13 +42,9 @@ function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::In
             end
 
             # Construct dot products
-            wnorm2 = 0.0
+            wnorm2 = norm(wave[range, mw,i], 2)
             dotl = dotr[mw]
-            dotr[mw] = 0.0
-            for m=1:num_eqn
-                wnorm2 = wnorm2 + wave[m,mw,i]^2
-                dotr[mw] = dotr[mw] + wave[m,mw,i]*wave[m,mw,i+1]
-            end
+            dotr[mw] = dot(wave[range, mw,i], wave[range, mw,i+1])
 
             # Skip this loop if it's on the boundary or the size of the wave is
             # zero (but still want dot products to be initialized above)
@@ -83,16 +71,16 @@ function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::In
             elseif mthlim[mw] == 2
                 wlimiter = max(0.0, min(1.0, 2.0*r), min(2.0, r))
 
-                # Van Leer
+            # Van Leer
             elseif mthlim[mw] == 3 
                 wlimiter = (r + abs(r)) / (1.0 + abs(r))
 
-                # Monotonized - Centered
+            # Monotonized - Centered
             elseif mthlim[mw] == 4 
                 c = (1.0 + r)/2.0
                 wlimiter = max(0.0, min(c, 2.0, 2.0*r))
 
-                # Beam Warming
+            # Beam Warming
             elseif mthlim[mw] == 5
                 wlimiter = r
 
@@ -102,11 +90,7 @@ function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::In
             end # if
 
             # Apply resulting limit
-            # broken below => expand into loop
-            #wave[..,mw,i] = wlimiter * wave[..,mw,i]
-            for k = 1:num_eqn
-                wave[k,mw,i] = wlimiter * wave[k,mw,i]
-            end
+            wave[range, mw,i] *= wlimiter
  
         end # do wave_loop
     end # do x_loop
