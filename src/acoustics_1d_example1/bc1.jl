@@ -24,18 +24,13 @@ function bc1(meqn::Int, mbc::Int, mx::Int, xlower::Float64, dx::Float64,
 #     # to the virtual cells outside the region, with
 #     #      i = 1-ibc  and   i = mx+ibc   for ibc=1,...,mbc
 #
-##      implicit double precision (a-h,o-z)
-##      dimension q(meqn,1-mbc:mx+mbc)
-##      dimension aux(maux,1-mbc:mx+mbc)
-##
-##      dimension mthbc(2)
-
 #
 #
 #-------------------------------------------------------
 #     # left boundary:
 #-------------------------------------------------------
 #
+    range::UnitRange = 1:meqn
     if mthbc[1] == 0
 
         # user-specified boundary conditions go here in place of error output
@@ -43,38 +38,23 @@ function bc1(meqn::Int, mbc::Int, mx::Int, xlower::Float64, dx::Float64,
         exit(-1)
 
     elseif mthbc[1] == 1
-
         # zero-order extrapolation:
         for ibc=1:mbc
-            for m=1:meqn
-                q[m,1-ibc] = q[m,1]
-            end
+            q[range, 1-ibc] = q[range, 1]
         end
-        @goto l199
-
     elseif mthbc[1] == 2 
         # periodic:
         for ibc=1:mbc
-            for m=1:meqn
-                q[m,1-ibc] = q[m,mx+1-ibc]
-            end
+            q[range, 1-ibc] = q[range, mx+1-ibc]
         end
-        @goto l199
-
     elseif mthbc[1] == 3 
         # solid wall (assumes 2'nd component is velocity or momentum in x):
         for ibc=1:mbc
-            for m=1:meqn
-                q[m,1-ibc] = q[m,ibc]
-            end
+            q[range, 1-ibc] = q[range, ibc]
             q[2,1-ibc] = -q[2,ibc]
         end
         # negate the normal velocity:
-        @goto l199
-
     end # if mthbc[1] == ...
-
-@label l199
 
 #
 #-------------------------------------------------------
@@ -89,34 +69,20 @@ function bc1(meqn::Int, mbc::Int, mx::Int, xlower::Float64, dx::Float64,
     elseif mthbc[2] == 1
         # zero-order extrapolation:
         for ibc=1:mbc
-            for m=1:meqn
-                q[m,mx+ibc] = q[m,mx]
-            end
+            q[range, mx+ibc] = q[range, mx]
         end
-        return
-
     elseif mthbc[2] == 2 
         # periodic:  
         for ibc=1:mbc
-            for m=1:meqn
-                q[m,mx+ibc] = q[m,ibc]
-            end
+            q[range, mx+ibc] = q[range, ibc]
         end
-        return
-
     elseif mthbc[2] == 3 
         # solid wall (assumes 2'nd component is velocity or momentum in x):
         for ibc=1:mbc
-            for m=1:meqn
-                q[m,mx+ibc] = q[m,mx+1-ibc]
-            end
+            q[range, mx+ibc] = q[range, mx+1-ibc]
             q[2,mx+ibc] = -q[2,mx+1-ibc]
         end
-        return
-
     end # if mthbc[2] == ...
-#  299 continue
-#
 
 end
 
