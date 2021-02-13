@@ -13,10 +13,11 @@ mutable struct Reader
     function Reader(fname::String)
         istream = open(fname, "r")
         r = new(fname,istream, "", 0)
-        #finalizer(r, close_reader)
         return r
     end
 end
+
+finalizer(r::Reader, close_reader) = close_reader(r)
 
 function readln(r::Reader)
     skip_rexp = r"^\s*(?:#|$)"
@@ -74,6 +75,7 @@ readintarray(r::Reader, len::Int) = readarray(r, x -> parse(Int, x), len)
 readfltarray(r::Reader, len::Int) = readarray(r, x -> parse(Float64, x), len)
 
 function close_reader(r::Reader)
+    println("closing Reader $(r.fname)")
     Base.close(r.istream)
 end
 
