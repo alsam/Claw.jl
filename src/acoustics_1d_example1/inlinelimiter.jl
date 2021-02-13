@@ -71,7 +71,7 @@ function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::In
                 #= Van Leer =#               3 => (r + abs(r)) / (1.0 + abs(r))
                 #= Monotonized - Centered =# 4 => (c = (1.0 + r)/2.0; max(0.0, min(c, 2.0, 2.0*r)))
                 #= Beam Warming =#           5 => r
-                _ => error("Invalid limiter method.")
+                                             _ => error("Invalid limiter method.")
             end # match
 
             # Apply resulting limit
