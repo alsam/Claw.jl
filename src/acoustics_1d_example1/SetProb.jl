@@ -1,8 +1,8 @@
 include("ReadDataFile.jl")
 
-using .ReadDataFile
 module SetProb
 
+using Main.ReadDataFile
 
 export
     CParam, read_prob_data
@@ -24,14 +24,13 @@ end
 # Set the material parameters for the acoustic equations
 
 function read_prob_data(parms::CParam)
-    # FIXME
-    r = Main.ReadDataFile.Reader("setprob.data")
+    r = Reader("setprob.data")
 
     # density:
-    parms.rho  = Main.ReadDataFile.readflt(r)
+    parms.rho  = readflt(r)
 
     # bulk modulus:
-    parms.bulk = Main.ReadDataFile.readflt(r)
+    parms.bulk = readflt(r)
 
     # sound speed:
     parms.cc = sqrt(parms.bulk/parms.rho)
@@ -40,9 +39,9 @@ function read_prob_data(parms::CParam)
     parms.zz = parms.cc*parms.rho
 
     # beta for initial conditions:
-    parms.beta = Main.ReadDataFile.readflt(r)
+    parms.beta = readflt(r)
 
-    Main.ReadDataFile.close_reader(r)
+    close_reader(r)
 end # read_prob_data
 
 end # SetProb
