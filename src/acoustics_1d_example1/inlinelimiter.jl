@@ -24,6 +24,7 @@
 
 using OffsetArrays
 using LinearAlgebra # for `dot`
+using Match
 
 function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::Int,
                  wave::OffsetArray{Float64}, s::OffsetArray{Float64}, mthlim::Array{Int,1})
@@ -64,31 +65,14 @@ function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::In
             end
 
             # Compute value of limiter function
-            # Minmod
-            if     mthlim[mw] == 1
-                wlimiter = max(0.0, min(1.0, r))
-
-            # Superbee
-            elseif mthlim[mw] == 2
-                wlimiter = max(0.0, min(1.0, 2.0*r), min(2.0, r))
-
-            # Van Leer
-            elseif mthlim[mw] == 3 
-                wlimiter = (r + abs(r)) / (1.0 + abs(r))
-
-            # Monotonized - Centered
-            elseif mthlim[mw] == 4 
-                c = (1.0 + r)/2.0
-                wlimiter = max(0.0, min(c, 2.0, 2.0*r))
-
-            # Beam Warming
-            elseif mthlim[mw] == 5
-                wlimiter = r
-
-            else
-                error("Invalid limiter method.")
-
-            end # if
+            wlimiter = @match mthlim[mw] begin
+                #= Minmod   =#               1 => max(0.0, min(1.0, r))
+                #= Superbee =#               2 => max(0.0, min(1.0, 2.0*r), min(2.0, r))
+                #= Van Leer =#               3 => (r + abs(r)) / (1.0 + abs(r))
+                #= Monotonized - Centered =# 4 => (c = (1.0 + r)/2.0; max(0.0, min(c, 2.0, 2.0*r)))
+                #= Beam Warming =#           5 => r
+                _ => error("Invalid limiter method.")
+            end # match
 
             # Apply resulting limit
             wave[range, mw,i] *= wlimiter
