@@ -29,7 +29,7 @@ function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::In
                  wave::OffsetArray{Float64}, s::OffsetArray{Float64}, mthlim::Array{Int,1})
 
     range::UnitRange = 1:num_eqn
-    dotr = Array{Float64}(undef, num_waves)
+    dotr = Vector{Float64}(undef, num_waves)
 
     dotr[:] .= 0.0
 

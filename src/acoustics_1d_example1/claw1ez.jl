@@ -73,39 +73,39 @@ function claw1ez()    # No arguments
 ### 
     r = Reader("claw.data")
 
-    ndim     = readint(r)
-    xlower   = readflt(r)
-    xupper   = readflt(r)
-    mx       = readint(r)
-    meqn     = readint(r)
-    mwaves   = readint(r)
-    maux     = readint(r)
-    t0       = readflt(r)
+    ndim     = read_int(r)
+    xlower   = read_flt(r)
+    xupper   = read_flt(r)
+    mx       = read_int(r)
+    meqn     = read_int(r)
+    mwaves   = read_int(r)
+    maux     = read_int(r)
+    t0       = read_flt(r)
 
     println("read from claw.data : ndim: $ndim xlower: $xlower xupper: $xupper mx: $mx meqn: $meqn mwaves: $mwaves maux: $maux t0: $t0")
 
-    outstyle = readint(r)
+    outstyle = read_int(r)
  
     tout = Vector{Float64}
     if     outstyle == 1
-        nout      = readint(r)
-        tfinal    = readflt(r)
-        output_t0 = readbool(r)       # Not currently used
+        nout      = read_int(r)
+        tfinal    = read_flt(r)
+        output_t0 = read_bool(r)       # Not currently used
         nstepout  = 1
 
         println("nout: $nout tfinal: $tfinal output_t0: $output_t0")
 
 
     elseif outstyle == 2
-        nout      = readint(r)
-        tout      = readfltarray(r, nout)
+        nout      = read_int(r)
+        tout      = read_flt_array(r, nout)
         println("tout: $tout")
         nstepout  = 1
 
     elseif outstyle == 3
-        nstepout  = readint(r)
-        nstop     = readint(r)
-        output_t0 = readbool(r)       # Not currently used
+        nstepout  = read_int(r)
+        nstop     = read_int(r)
+        output_t0 = read_bool(r)       # Not currently used
         nout      = nstop
 
     else
@@ -114,17 +114,17 @@ function claw1ez()    # No arguments
         error("*** Exiting claw1ez")
     end
 
-    output_format = readint(r)    # Not used yet
+    output_format = read_int(r)    # Not used yet
 
-    iout_q = readfltarray(r, meqn)
+    iout_q = read_flt_array(r, meqn)
     println("iout_q: $iout_q")
 
 #        iout_aux
 
     iout_aux = Vector{Int}
     if maux > 0
-        iout_aux = readintarray(r, maux)
-        outaux_init_only = readbool(r)
+        iout_aux = read_int_array(r, maux)
+        outaux_init_only = read_bool(r)
 
         # TODO
     else
@@ -132,37 +132,37 @@ function claw1ez()    # No arguments
         outaux_init_only = false    # Just to initialize
     end
 
-    dtv[1]  = readflt(r)    # Initial dt
-    dtv[2]  = readflt(r)    # Max dt
-    cflv[1] = readflt(r)    # Max CFL number
-    cflv[2] = readflt(r)    # Desired CFL number
-    nv[1]   = readint(r)    # Maximum number of steps
+    dtv[1]  = read_flt(r)    # Initial dt
+    dtv[2]  = read_flt(r)    # Max dt
+    cflv[1] = read_flt(r)    # Max CFL number
+    cflv[2] = read_flt(r)    # Desired CFL number
+    nv[1]   = read_int(r)    # Maximum number of steps
 
     println("dtv: $dtv cflv: $cflv nv: $nv")
 
-    dt_variable::Bool = readbool(r)
+    dt_variable::Bool = read_bool(r)
     method[1] = dt_variable ? 1 : 0
 
-    method[2] = readint(r) # Order
+    method[2] = read_int(r) # Order
 
     # method(3) (transverse order) not used in 1D
     # No dimensional splitting in 1D
 
-    method[4] = readint(r) # Verbosity
-    method[5] = readint(r) # Source term splitting style
-    method[6] = readint(r) # Index into aux of capacity function
+    method[4] = read_int(r) # Verbosity
+    method[5] = read_int(r) # Source term splitting style
+    method[6] = read_int(r) # Index into aux of capacity function
     method[7] = maux       # Number of aux variables
 
     println("method: $method")
 
-    use_fwaves::Bool = readbool(r)
+    use_fwaves::Bool = read_bool(r)
 
-    mthlim::Array{Int, 1} = readintarray(r, mwaves)
+    mthlim::Array{Int, 1} = read_int_array(r, mwaves)
     println("mthlim: $mthlim")
 
-    mbc      = readint(r)
-    mthbc[1] = readint(r)
-    mthbc[2] = readint(r)
+    mbc      = read_int(r)
+    mthbc[1] = read_int(r)
+    mthbc[2] = read_int(r)
 
     println("mbc: $mbc mthbc: $mthbc")
 
@@ -197,7 +197,7 @@ function claw1ez()    # No arguments
  
     # Allocate aux
 
-    aux = (maux > 0) ? OffsetArray{Float64}(undef, 1:maux, 1-mbc:mx+mbc) : OffsetArray{Float64}(undef, 1:1,1:1)
+    aux = (maux > 0) ? OffsetArray{Float64}(undef, 1:maux, 1-mbc:mx+mbc) : OffsetArray{Float64}(undef, 1:1, 1:1)
 
     q = OffsetArray{Float64}(undef, 1:meqn, 1-mbc:mx+mbc)
 

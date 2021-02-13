@@ -27,10 +27,10 @@ function read_prob_data(parms::CParam)
     r = Reader("setprob.data")
 
     # density:
-    parms.rho  = readflt(r)
+    parms.rho  = read_flt(r)
 
     # bulk modulus:
-    parms.bulk = readflt(r)
+    parms.bulk = read_flt(r)
 
     # sound speed:
     parms.cc = sqrt(parms.bulk/parms.rho)
@@ -39,7 +39,7 @@ function read_prob_data(parms::CParam)
     parms.zz = parms.cc*parms.rho
 
     # beta for initial conditions:
-    parms.beta = readflt(r)
+    parms.beta = read_flt(r)
 
     close_reader(r)
 end # read_prob_data

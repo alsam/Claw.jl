@@ -1,6 +1,6 @@
 module ReadDataFile
 
-export Reader, readstr, readbool, readint, readflt, readintarray, readfltarray, close_reader
+export Reader, read_str, read_bool, read_int, read_flt, read_int_array, read_flt_array, close_reader
 
 mutable struct Reader
        
@@ -35,12 +35,12 @@ function readln(r::Reader)
     r.line = m.captures[1]
 end
 
-function readstr(r::Reader)
+function read_str(r::Reader)
     readln(r)
     return r.line
 end
 
-function readbool(r::Reader)
+function read_bool(r::Reader)
     readln(r)
     if r.line != "T" && r.line != "F"
         local fname = r.fname, lineno = r.lineno
@@ -49,30 +49,30 @@ function readbool(r::Reader)
     return r.line == "T"
 end
 
-function readint(r::Reader)
+function read_int(r::Reader)
     readln(r)
     return parse(Int,r.line)
 end
 
-function readflt(r::Reader)
+function read_flt(r::Reader)
     readln(r)
     return parse(Float64, r.line)
 end
 
-function readraw(r::Reader)
+function read_raw(r::Reader)
     readln(r)
     return split(r.line)
 end
 
-function readarray(r::Reader, parser, len)
-    buf = readraw(r)
+function read_array(r::Reader, parser, len)
+    buf = read_raw(r)
     buflen = length(buf)
     @assert(buflen == len)
     return [parser(buf[i]) for i = 1:buflen]
 end
 
-readintarray(r::Reader, len::Int) = readarray(r, x -> parse(Int, x), len)
-readfltarray(r::Reader, len::Int) = readarray(r, x -> parse(Float64, x), len)
+read_int_array(r::Reader, len::Int) = read_array(r, x -> parse(Int, x), len)
+read_flt_array(r::Reader, len::Int) = read_array(r, x -> parse(Float64, x), len)
 
 function close_reader(r::Reader)
     println("closing Reader $(r.fname)")
