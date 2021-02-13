@@ -405,7 +405,7 @@ function claw1(parms::CParam,meqn::Int, mwaves::Int, maux::Int, mbc::Int, mx::In
 #
     
     info::Int = 0
-    q_save = OffsetArray(Float64, 1:meqn, 1-mbc:mx+mbc)
+    q_save = OffsetArray{Float64}(undef, 1:meqn, 1-mbc:mx+mbc)
 
     info = 0
     t = tstart
@@ -450,12 +450,12 @@ function claw1(parms::CParam,meqn::Int, mwaves::Int, maux::Int, mbc::Int, mx::In
         return
     end
 
-    f    = OffsetArray(Float64, 1:meqn,              1-mbc:mx+mbc)
-    s    = OffsetArray(Float64,            1:mwaves, 1-mbc:mx+mbc)
-    wave = OffsetArray(Float64, 1:meqn,    1:mwaves, 1-mbc:mx+mbc)
-    amdq = OffsetArray(Float64, 1:meqn,              1-mbc:mx+mbc)
-    apdq = OffsetArray(Float64, 1:meqn,              1-mbc:mx+mbc)
-    dtdx = OffsetArray(Float64,                      1-mbc:mx+mbc)
+    f    = OffsetArray{Float64}(undef, 1:meqn,              1-mbc:mx+mbc)
+    s    = OffsetArray{Float64}(undef,            1:mwaves, 1-mbc:mx+mbc)
+    wave = OffsetArray{Float64}(undef, 1:meqn,    1:mwaves, 1-mbc:mx+mbc)
+    amdq = OffsetArray{Float64}(undef, 1:meqn,              1-mbc:mx+mbc)
+    apdq = OffsetArray{Float64}(undef, 1:meqn,              1-mbc:mx+mbc)
+    dtdx = OffsetArray{Float64}(undef,                      1-mbc:mx+mbc)
 
     cfl::Float64 = 0.0
     for n=1:maxn

@@ -1,5 +1,5 @@
 using OffsetArrays
-using SetProb
+using .SetProb
 
 function qinit(parm::CParam, meqn::Int, mbc::Int, mx::Int, xlower::Float64, dx::Float64, q::OffsetArray{Float64}, maux::Int, aux::OffsetArray{Float64})
 

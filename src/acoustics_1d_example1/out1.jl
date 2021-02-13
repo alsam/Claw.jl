@@ -1,4 +1,5 @@
 using OffsetArrays
+using Printf # for @sprintf, etc.
 #import Base.close
 
 #=========================================================#
@@ -45,9 +46,9 @@ function out1(meqn::Int, mbc::Int, mx::Int, xlower::Float64, dx::Float64,
 ## 55   continue
 ##
 
-    fname1 = @sprintf("fort.q%04d", iframe)
-    fname2 = @sprintf("fort.t%04d", iframe)
-    fname3 = @sprintf("fort.a%04d", iframe)
+    fname1 = Printf.@sprintf("fort.q%04d", iframe)
+    fname2 = Printf.@sprintf("fort.t%04d", iframe)
+    fname3 = Printf.@sprintf("fort.a%04d", iframe)
 
 ##      open(unit=50,file=fname1,status='unknown',form='formatted')
 ##      open(unit=60,file=fname2,status='unknown',form='formatted')

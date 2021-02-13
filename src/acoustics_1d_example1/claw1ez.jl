@@ -4,8 +4,8 @@ using OffsetArrays
 include("ReadDataFile.jl")
 include("SetProb.jl")
 
-using ReadDataFile
-using SetProb
+using .ReadDataFile
+using .SetProb
 
 include("qinit.jl")
 include("out1.jl")
@@ -38,11 +38,11 @@ function claw1ez()    # No arguments
 
 
 #      dimension method(7),dtv(5),cflv(4),nv(2),mthbc(2)
-    method = Array(Int, 7)
-    dtv    = Array(Float64, 5)
-    cflv   = Array(Float64, 4)
-    nv     = Array(Int, 2)
-    mthbc  = Array(Int, 2)
+    method = Vector{Int}(undef, 7)
+    dtv    = Vector{Float64}(undef, 5)
+    cflv   = Vector{Float64}(undef, 4)
+    nv     = Vector{Int}(undef, 2)
+    mthbc  = Vector{Int}(undef, 2)
 
 ###       integer :: allocate_status, outstyle
 ###       logical :: outaux_init_only, use_fwaves, output_t0
@@ -86,7 +86,7 @@ function claw1ez()    # No arguments
 
     outstyle = readint(r)
  
-    tout = Array(Float64, 1)
+    tout = Vector{Float64}
     if     outstyle == 1
         nout      = readint(r)
         tfinal    = readflt(r)
@@ -121,7 +121,7 @@ function claw1ez()    # No arguments
 
 #        iout_aux
 
-    iout_aux = Array(Int, 1)
+    iout_aux = Vector{Int}
     if maux > 0
         iout_aux = readintarray(r, maux)
         outaux_init_only = readbool(r)
@@ -197,9 +197,9 @@ function claw1ez()    # No arguments
  
     # Allocate aux
 
-    aux = (maux > 0) ? OffsetArray(Float64, 1:maux, 1-mbc:mx+mbc) : OffsetArray(Float64, 1:1,1:1)
+    aux = (maux > 0) ? OffsetArray{Float64}(undef, 1:maux, 1-mbc:mx+mbc) : OffsetArray{Float64}(undef, 1:1,1:1)
 
-    q = OffsetArray(Float64, 1:meqn, 1-mbc:mx+mbc)
+    q = OffsetArray{Float64}(undef, 1:meqn, 1-mbc:mx+mbc)
 
     # set initial conditions:
 

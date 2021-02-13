@@ -23,14 +23,15 @@
 #     # of wave.
 
 using OffsetArrays
+using LinearAlgebra # for `dot`
 
 function limiter(maxm::Int, num_eqn::Int, num_waves::Int, num_ghost::Int, mx::Int,
                  wave::OffsetArray{Float64}, s::OffsetArray{Float64}, mthlim::Array{Int,1})
 
     range::UnitRange = 1:num_eqn
-    dotr = Array(Float64, num_waves)
+    dotr = Array{Float64}(undef, num_waves)
 
-    dotr[:] = 0.0
+    dotr[:] .= 0.0
 
     # x_loop:
     for i = 0:mx+1

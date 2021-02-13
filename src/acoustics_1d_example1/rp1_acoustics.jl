@@ -1,5 +1,5 @@
 using OffsetArrays
-using SetProb
+using .SetProb
 
 # ============================================================================
 function rp1(parms::CParam,
@@ -42,7 +42,7 @@ function rp1(parms::CParam,
 #     local arrays
 #     ------------
 #    dimension delta(2)
-    delta = Array(Float64, 2)
+delta = Vector{Float64}(undef, 2)
 
 # density, bulk modulus, and sound speed, and impedence of medium:
 # (should be set in setprob.f)

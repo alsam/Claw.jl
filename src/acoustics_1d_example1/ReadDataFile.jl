@@ -2,7 +2,7 @@ module ReadDataFile
 
 export Reader, readstr, readbool, readint, readflt, readintarray, readfltarray, close_reader
 
-type Reader
+mutable struct Reader
        
     fname::String
     istream::IOStream
@@ -13,14 +13,14 @@ type Reader
     function Reader(fname::String)
         istream = open(fname, "r")
         r = new(fname,istream, "", 0)
-        finalizer(r, close_reader)
+        #finalizer(r, close_reader)
         return r
     end
 end
 
 function readln(r::Reader)
-    const skip_rexp = r"^\s*(?:#|$)"
-    const rexp = r"^\s*(.*?)\s*(?:(#|=:)\s*(.*?)\s*$|$)"
+    skip_rexp = r"^\s*(?:#|$)"
+    rexp = r"^\s*(.*?)\s*(?:(#|=:)\s*(.*?)\s*$|$)"
 
     while true
         r.line = readline(r.istream)
@@ -80,7 +80,7 @@ end
 # ```jlcon
 # julia> include("ReadDataFile.jl")
 # 
-# julia> using ReadDataFile
+# julia> using .ReadDataFile
 # 
 # julia> r = Reader("claw.data")
 # -I- claw.data 6 blank lines were skipped
