@@ -1,0 +1,974 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for grffile with XeLaTeX
+    \def\Gread@@xetex#1{%
+      \IfFileExists{"\Gin@base".bb}%
+      {\Gread@eps{\Gin@base.bb}}%
+      {\Gread@@xetex@aux#1}%
+    }
+    \makeatother
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Acoustics}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{acoustics}{%
+\section{Acoustics}\label{acoustics}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}}\PY{k}{config} InlineBackend.figure\PYZus{}format = \PYZsq{}svg\PYZsq{}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{exact\PYZus{}solvers} \PY{k}{import} \PY{n}{acoustics}\PY{p}{,} \PY{n}{acoustics\PYZus{}demos}
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k}{import} \PY{n}{IFrame}\PY{p}{,} \PY{n}{HTML}\PY{p}{,} \PY{n}{Image}
+\end{Verbatim}
+\end{tcolorbox}
+
+    In this chapter we consider our first \emph{system} of hyperbolic
+conservation laws. We study the acoustics equations that were introduced
+briefly in \href{Introduction.ipynb}{Introduction}. We first describe
+the physical context of this system and then investigate its
+characteristic structure and the solution to the Riemann problem. This
+system is described in more detail in Chapter 3 of \cite{fvmhp}.
+
+    If you wish to examine the Python code for this chapter, please see:
+
+\begin{itemize}
+\tightlist
+\item
+  \url{exact_solvers/acoustics.py} \ldots{}
+  \href{https://github.com/clawpack/riemann_book/blob/FA16/exact_solvers/acoustics.py}{on
+  github,}
+\item
+  \url{exact_solvers/acoustics_demos.py} \ldots{}
+  \href{https://github.com/clawpack/riemann_book/blob/FA16/exact_solvers/acoustics_demos.py}{on
+  github.}
+\end{itemize}
+
+    \hypertarget{physical-setting}{%
+\subsection{Physical setting}\label{physical-setting}}
+
+The linear acoustic equations describe the propagation of small
+perturbations in a fluid. In \href{Advection.ipynb}{Advection} we
+derived the one-dimensional continuity equation, which describes mass
+conservation:\\
+\begin{align} \label{Ac:continuity}
+    \rho_t + (\rho u)_x & = 0.
+\end{align}\\
+For more realistic fluid models, we need another equation that
+determines the velocity \(u\). This typically takes the form of a
+conservation law for the momentum \(\rho u\). Momentum, like density, is
+transported by fluid motion with corresponding flux \(\rho u^2\).
+Additionally, any difference in pressure will also lead to a flux of
+momentum that is proportional to the pressure difference. Thus the
+momentum equation takes the form\\
+\begin{align} \label{Ac:mom_cons}
+(\rho u)_t + (\rho u^2 + P(\rho))_x & = 0,
+\end{align}\\
+where the pressure \(P\) is is given by the equation of state
+\(P(\rho)\); here we have assumed the pressure depends only on the
+density. A more general equation of state will be considered, along with
+fully nonlinear fluid motions, in \href{Euler.ipynb}{Euler}. The linear
+acoustics equations focus on the behavior of small perturbations in the
+system above.
+
+    In order to derive the equations of linear acoustics, observe that
+equations (\ref{Ac:continuity})-(\ref{Ac:mom_cons}) form a hyperbolic
+system \(q_t+f(q)_x=0\) with\\
+\begin{align*}
+q & = \begin{bmatrix} \rho \\ \rho u \end{bmatrix} & 
+f(q) & = \begin{bmatrix} \rho u \\ \rho u^2 + P(\rho) \end{bmatrix}
+\end{align*}\\
+We will make use of the quasilinear form of a hyperbolic system:
+\[q_t + f'(q) q_x = 0.\]\\
+Here \(f'(q)\) denotes the Jacobian of the flux \(f\) with respect to
+the conserved variables \(q\). In the present system, as is often the
+case, \(f\) is most naturally written in terms of so-called primitive
+variables (in this case \(\rho\) and \(u\)) rather than in terms of the
+conserved variables \(q\). In order to find the flux Jacobian (and thus
+the quasilinear form), we first write \(f\) in terms of the conserved
+variables \((q_1,q_2) = (\rho, \rho u)\):\\
+\begin{align}
+f(q) & = \begin{bmatrix} q_2 \\ q_2^2/q_1 + P(q_1) \end{bmatrix}.
+\end{align}
+
+    Now we can differentiate to find the flux Jacobian:\\
+\begin{align*}
+f'(q) & = \begin{bmatrix} \partial f_1/\partial q_1 & \partial f_1/\partial q_2 \\
+                          \partial f_2/\partial q_1 & \partial f_2/\partial q_2 \end{bmatrix} \\
+      & = \begin{bmatrix} 0 & 1 \\ -q_2^2/q_1^2 + P'(q_1) & 2q_2/q_1 \end{bmatrix} \\
+      & = \begin{bmatrix} 0 & 1 \\ P'(\rho)-u^2 & 2u \end{bmatrix}.
+\end{align*}
+
+Thus small perturbations to an ambient fluid state \(\rho_0, u_0\)
+evolve according to the linearized equations \(q_t + f'(q_0) q_x = 0\),
+or more explicitly \begin{align*}
+\rho_t + (\rho u)_x & = 0 \\
+(\rho u)_t + (P'(\rho_0)-u_0^2)\rho_x + 2u_0(\rho u)_x & = 0.
+\end{align*}\\
+As we are only interested in small perturbations of equation
+(\ref{Ac:mom_cons}), we expand the perturbations \(\rho-\rho_0\) and
+\(\rho u - \rho_0 u_0\) as functions of a small parameter \(\epsilon\),
+and then we discard terms of order \(\epsilon^2\) and higher. This
+results in the linear hyperbolic system\\
+\begin{align*}
+p_t + u_0 p_x + P'(\rho_0) u_x & = 0 \\
+u_t + \frac{1}{\rho_0} p_x + u_0 u_x & = 0,
+\end{align*} where \(p(x,t)\) is the pressure as a function of \(x\) and
+\(t\). If the ambient fluid is at rest (i.e.~\(u_0=0\)) and the pressure
+is directly proportional to the density, then this simplifies to
+\begin{align} \label{Ac:main}
+ \left[ \begin{array}{c}
+p \\
+u 
+\end{array} \right]_t +  \underbrace{\left[ \begin{array}{cc}
+0 & K_0 \\
+1/\rho_0 & 0  \\
+\end{array} \right]}_{\mathbf{A}}
+\left[ \begin{array}{c}
+p \\
+u \end{array} \right]_x = 0,
+\end{align} where \(K_0=P'(\rho_0)\) is referred to as the bulk modulus
+of compressibility. The system of equations (\ref{Ac:main}) is called
+the linear acoustics equations.
+
+    For the rest of this chapter we work with (\ref{Ac:main}) and let
+\(q=[p,u]^T\). Then we can write (\ref{Ac:main}) as \(q_t + A q_x = 0\).
+For simplicity, we also drop the subscripts on \(K, \rho\). Direct
+calculation reveals that the eigenvectors of \(A\) are \begin{align}
+\lambda_1 = -c, \qquad \lambda_2 = c
+\end{align} where \(c=\sqrt{{K}/{\rho}}\) is the speed of sound in a
+medium with a given density and bulk modulus. The right eigenvectors of
+\(A\) are given by \begin{align*}
+r_1 = \begin{bmatrix}\begin{array}{c}-Z\\1\end{array}\end{bmatrix}, \qquad r_2 = \begin{bmatrix}\begin{array}{c}Z\\1\end{array}\end{bmatrix},
+\end{align*} where \(Z=\rho c\) is called the acoustic impedance.
+Defining \(R = [r_1 r_2]\) and \(\Lambda = diag(\lambda_1, \lambda_2)\),
+we have \(AR = R\Lambda\), or \(A = R \Lambda R^{-1}\). Substituting
+this into (\ref{Ac:main}) yields \begin{align*}
+q_t + A q_x & = 0 \\
+q_t + R \Lambda R^{-1} q_x & = 0 \\
+R^{-1}q_t + \Lambda R^{-1} q_x & = 0 \\
+w_t + \Lambda w_x & = 0,
+\end{align*} where we have introduced the \emph{characteristic
+variables} \(w=R^{-1}q\). The last system above is simply a pair of
+decoupled advection equations for \(w_1\) and \(w_2\), with velocities
+\(\lambda_1\) and \(\lambda_2\); a system we already know how to solve.
+Thus we see that the eigenvalues of \(A\) are the velocities at which
+information propagates in the solution.
+
+    \hypertarget{solution-by-characteristics}{%
+\subsection{Solution by
+characteristics}\label{solution-by-characteristics}}
+
+    The discussion above suggests a strategy for solving the Cauchy problem:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Decompose the initial data \((p(x,0), u(x,0))\) into characteristic
+  variables \(w(x,0)=(w_1^0(x),w_2^0(x,0))\) using the relation
+  \(w = R^{-1}q\).
+\item
+  Evolve the characteristic variables:
+  \(w_p(x,t) = w_p^0(x-\lambda_p t)\).
+\item
+  Transform back to the physical variables: \(q = Rw\).
+\end{enumerate}
+
+The first step in this process amounts to expressing the vector \(q\) in
+the basis given by \(r_1, r_2\). Solving the system \(Rw=q\) yields
+\begin{align*}
+q = w_1 r_1 + w_2 r_2,
+\end{align*} where \begin{align*}
+w_1 = \frac{- p + Z u}{2Z}, \ \ \ \ \ \
+w_2 = \frac{ p + Z u}{2Z}.
+\end{align*}
+
+We visualize this below, where the first plot shows the two
+eigenvectors, and the second plot shows how \(q\) can be expressed as a
+linear combination of the two eigenvectors, \(r_1\) and \(r_2\).
+\emph{In the live notebook you can adjust the left and right states or
+the material parameters to see how this affects the construction of the
+Riemann solution.}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}}\PY{k}{config} InlineBackend.figure\PYZus{}format = \PYZsq{}svg\PYZsq{}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{exact\PYZus{}solvers} \PY{k}{import} \PY{n}{acoustics}\PY{p}{,} \PY{n}{acoustics\PYZus{}demos}
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k}{import} \PY{n}{IFrame}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{acoustics\PYZus{}demos}\PY{o}{.}\PY{n}{decompose\PYZus{}q\PYZus{}interactive}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{verbatim}
+interactive(children=(FloatSlider(value=1.0, description='p', max=1.0, min=-1.0), FloatSlider(value=0.3, descr…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+VBox(children=(HBox(children=(FloatSlider(value=1.0, description='p', max=1.0, min=-1.0), FloatSlider(value=1.…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+Output()
+    \end{verbatim}
+
+    
+    In the second and third steps, we evolve the characteristic variables
+\(w\) and then transform back to the original variables. We take as
+initial pressure a Gaussian, with zero initial velocity. We visualize
+this below, where the time evolution in the characteristic variables is
+shown in the first plot, and the time evolution of the velocity is shown
+in the second plot.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{acoustics\PYZus{}demos}\PY{o}{.}\PY{n}{char\PYZus{}solution\PYZus{}interactive}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{verbatim}
+interactive(children=(FloatSlider(value=0.0, description='t', max=1.2), FloatSlider(value=1.0, description='K'…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+HBox(children=(VBox(children=(FloatSlider(value=0.0, description='t', max=1.2),)), VBox(children=(FloatSlider(…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+Output()
+    \end{verbatim}
+
+    
+    \emph{In the live notebook, you can advance the above solutions in time
+and select which of the two characteristic variables to display.} Notice
+how in the characteristic variables \(w\) (plotted on the left), each
+part of the solution simply advects (translates) since each of the
+characteristics variables simply obeys an uncoupled advection equation.
+
+    \hypertarget{the-riemann-problem}{%
+\subsection{The Riemann problem}\label{the-riemann-problem}}
+
+Now that we know how to solve the Cauchy problem, solution of the
+Riemann problem is merely a special case. We have the special initial
+data\\
+\begin{align*}
+q(x,0) = \begin{cases}
+q_\ell & \text{if   } x \le 0, \\
+q_r & \text{if   } x > 0.
+\end{cases}
+\end{align*}\\
+We can proceed as before, by decomposing into characteristic components,
+advecting, and then transforming back. But since we know the solution
+will be constant almost everywhere, it's even simpler to just decompose
+the jump \(\Delta q = q_r - q_\ell\) in terms of the characteristic
+variables, and advect the two resulting jumps \(\Delta w_1\) and
+\(\Delta w_2\):\\
+\begin{align*}
+\Delta q = \Delta w_1 r_1 + \Delta w_2 r_2,
+\end{align*}\\
+Since \(R\Delta w = \Delta q\), we have\\
+\begin{align*}
+\Delta w_1 = \frac{-\Delta p + Z\Delta u}{2Z}, \ \ \ \ \ \
+\Delta w_2 = \frac{\Delta p + Z\Delta u}{2Z}.
+\end{align*}\\
+Thus the solution has the structure depicted below.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Image}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{figures/acoustics\PYZus{}xt\PYZus{}plane.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{width}\PY{o}{=}\PY{l+m+mi}{350}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{7}{}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_18_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    The three constant states are related by the jumps:\\
+\begin{align}
+q_m = q_\ell + \Delta w_1 r_1 = q_r - \Delta w_2 r_2.
+\label{eq:acussol}
+\end{align}\\
+The jumps in pressure and velocity for each propagating discontinuity
+are related in a particular way, since each jump is a multiple of one of
+the eigenvectors of \(A\). More generally, the eigenvectors of the
+coefficient matrix of a linear hyperbolic system reveal the relation
+between jumps in the conserved variables across a wave propagating with
+speed given by the corresponding eigenvalue. For acoustics, the
+impedance is the physical parameter that determines this relation.
+
+    \hypertarget{a-simple-solution}{%
+\subsubsection{A simple solution}\label{a-simple-solution}}
+
+Here we provide some very simple initial data, and determine the Riemann
+solution, which consists of three states \(q_\ell\), \(q_m\) and
+\(q_r\), and the speeds of the two waves.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Initial data for Riemann problem}
+\PY{n}{rho} \PY{o}{=} \PY{l+m+mf}{0.5}               \PY{c+c1}{\PYZsh{} density}
+\PY{n}{bulk} \PY{o}{=} \PY{l+m+mf}{2.}            \PY{c+c1}{\PYZsh{} bulk modulus}
+\PY{n}{ql} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}   \PY{c+c1}{\PYZsh{} Left state}
+\PY{n}{qr} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Right state}
+\PY{c+c1}{\PYZsh{} Calculated parameters}
+\PY{n}{c} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{bulk}\PY{o}{/}\PY{n}{rho}\PY{p}{)}  \PY{c+c1}{\PYZsh{} calculate sound speed}
+\PY{n}{Z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{bulk}\PY{o}{*}\PY{n}{rho}\PY{p}{)}  \PY{c+c1}{\PYZsh{} calculate impedance}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{With density rho = }\PY{l+s+si}{\PYZpc{}g}\PY{l+s+s2}{,  bulk modulus K = }\PY{l+s+si}{\PYZpc{}g}\PY{l+s+s2}{\PYZdq{}} \PYZbs{}
+      \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{rho}\PY{p}{,}\PY{n}{bulk}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{We compute: sound speed c = }\PY{l+s+si}{\PYZpc{}g}\PY{l+s+s2}{, impedance Z = }\PY{l+s+si}{\PYZpc{}g}\PY{l+s+s2}{ }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}} \PYZbs{}
+      \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{c}\PY{p}{,}\PY{n}{Z}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+With density rho = 0.5,  bulk modulus K = 2
+We compute: sound speed c = 2, impedance Z = 1
+
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Call and print Riemann solution}
+\PY{n}{states}\PY{p}{,} \PY{n}{speeds}\PY{p}{,} \PY{n}{reval} \PY{o}{=} \PYZbs{}
+    \PY{n}{acoustics}\PY{o}{.}\PY{n}{exact\PYZus{}riemann\PYZus{}solution}\PY{p}{(}\PY{n}{ql} \PY{p}{,}\PY{n}{qr}\PY{p}{,} \PY{p}{[}\PY{n}{rho}\PY{p}{,} \PY{n}{bulk}\PY{p}{]}\PY{p}{)}
+    
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The states ql, qm and qr are: }\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{states}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The left and right wave speeds are:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{speeds}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The states ql, qm and qr are:
+[[ 3.  5.  3.]
+ [ 2.  0. -2.]]
+
+The left and right wave speeds are:
+[-2.  2.]
+    \end{Verbatim}
+
+    One way to visualize the Riemann solution for a system of two equations
+is by looking at the \(p-u\) phase plane. In the figure below, we show
+the two initial conditions of the Riemann problem \(q_\ell\) and \(q_r\)
+as points in the phase space; the lines passing through these points
+correspond to the eigenvectors, \(r_1\) and \(r_2\).
+
+The middle state \(q_m\) is simply the intersection of the line in the
+direction \(r_1\) passing through \(q_\ell\) and the line in the
+direction \(r_2\) passing through \(q_r\). The structure of this
+solution becomes evident from equation (\ref{eq:acussol}). The dashed
+lines correspond to a line in the direction \(r_2\) passing through
+\(q_\ell\) and a line in the direction \(r_1\) passing through \(q_r\);
+these also intersect, but cannot represent a Riemann solution since they
+would involve a wave going to the right but connected to \(q_\ell\) and
+a wave going to the left but connected to \(q_r\).
+
+In the live notebook, the cell below allows you to interactively adjust
+the initial conditions the material parameters as well as the plot
+range, so that you can explore how the structure of the solution in the
+phase plane is affected by these quantities.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{acoustics\PYZus{}demos}\PY{o}{.}\PY{n}{interactive\PYZus{}phase\PYZus{}plane}\PY{p}{(}\PY{n}{ql}\PY{p}{,}\PY{n}{qr}\PY{p}{,}\PY{n}{rho}\PY{p}{,}\PY{n}{bulk}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{verbatim}
+interactive(children=(FloatSlider(value=3.0, description='$p_l$', max=10.0, min=0.01), FloatSlider(value=2.0, …
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+Tab(children=(VBox(children=(HBox(children=(FloatSlider(value=3.0, description='$p_l$', max=10.0, min=0.01), F…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+Output()
+    \end{verbatim}
+
+    
+    Note that the eigenvectors are given in terms of the impedance \(Z\),
+which depends on the density \(\rho\) and the bulk modulus \(K\).
+Therefore, when \(\rho\) and \(K\) are modified the eigenvectors change
+and consequently the slope of the lines changes as well.
+
+    \hypertarget{examples}{%
+\subsection{Examples}\label{examples}}
+
+We will use the exact solver in \url{exact_solvers/acoustics.py} and the
+functions in \url{exact_solvers/acoustics_demos.py} to plot interactive
+solutions for a few examples.
+
+\hypertarget{shock-tube}{%
+\subsubsection{Shock tube}\label{shock-tube}}
+
+If there is a jump in pressure and the velocity is zero in both initial
+states (the shock tube problem) then the resulting Riemann solution
+consists of pressure jumps of equal magnitude propagating in both
+directions, with equal and opposite jumps in velocity. This is the
+linearized version of what is known in fluid dynamics as a shock tube
+problem, since it emulates what would happen inside a shock tube, where
+the air is initially stationary and a separate chamber at the end of the
+tube is pressurized and then released.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ql} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n}{qr} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n}{rho} \PY{o}{=} \PY{l+m+mf}{1.0}
+\PY{n}{bulk} \PY{o}{=} \PY{l+m+mf}{4.0}
+\PY{n}{acoustics\PYZus{}demos}\PY{o}{.}\PY{n}{riemann\PYZus{}plot\PYZus{}pplane}\PY{p}{(}\PY{n}{ql}\PY{p}{,}\PY{n}{qr}\PY{p}{,}\PY{n}{rho}\PY{p}{,}\PY{n}{bulk}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{verbatim}
+interactive(children=(FloatSlider(value=0.0, description='$t$', max=1.0), Dropdown(description='Characs.', opt…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+HBox(children=(FloatSlider(value=0.0, description='$t$', max=1.0), Dropdown(description='Characs.', options=(N…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+Output()
+    \end{verbatim}
+
+    
+    We can also observe the structure of the solution in the phase plane. In
+the second plot, we show the structure of the solution in the phase
+plane.
+
+    \hypertarget{reflection-from-a-wall}{%
+\subsubsection{Reflection from a wall}\label{reflection-from-a-wall}}
+
+As another example, suppose the pressure is initially the same in the
+left and right states, while the velocities are non-zero with
+\(u_r = -u_\ell > 0\). The flow is converging from both sides and
+because of the symmetry of the initial states, the result is a middle
+state \(q_m\) in which the velocity is 0 (and the pressure is higher
+than on either side).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ql} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}  
+\PY{n}{qr} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}  
+\PY{n}{rho} \PY{o}{=} \PY{l+m+mf}{1.0}
+\PY{n}{bulk} \PY{o}{=} \PY{l+m+mf}{1.5}
+\PY{n}{acoustics\PYZus{}demos}\PY{o}{.}\PY{n}{riemann\PYZus{}plot\PYZus{}pplane}\PY{p}{(}\PY{n}{ql}\PY{p}{,}\PY{n}{qr}\PY{p}{,}\PY{n}{rho}\PY{p}{,}\PY{n}{bulk}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{verbatim}
+interactive(children=(FloatSlider(value=0.0, description='$t$', max=1.0), Dropdown(description='Characs.', opt…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+HBox(children=(FloatSlider(value=0.0, description='$t$', max=1.0), Dropdown(description='Characs.', options=(N…
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+Output()
+    \end{verbatim}
+
+    
+    We again show the Riemann solution in space and in the phase plane,
+where the symmetry is also evident.
+
+    Disregarding the left half of the domain (\(x<0\)), one can view this as
+a solution to the problem of an acoustic wave impacting a solid wall.
+The result is a reflected wave that moves away from the wall; notice
+that the velocity vanishes at the wall, as it must. This type of Riemann
+solution is important when simulating waves in a domain with reflecting
+boundaries. The reflecting condition can be imposed by the use of
+fictitious \emph{ghost cells} that lie just outside the domain and whose
+state is set by reflecting the interior solution with the symmetry just
+described (equal pressure, negated velocity).
+
+In reality, at a material boundary only part of a wave is reflected
+while the rest is transmitted. This can be accounted for by including
+the spatial variation in \(\rho, K\) and solving a variable-coefficient
+Riemann problem.
+
+    \hypertarget{interactive-phase-plane-with-solution-at-fixed-time}{%
+\subsubsection{Interactive phase plane with solution at fixed
+time}\label{interactive-phase-plane-with-solution-at-fixed-time}}
+
+For a more general exploration of the solution to the acoustics
+equation, we now show an interactive solution of the acoustics
+equations. The initial states \(q_\ell\) and \(q_r\) can be modified by
+dragging and dropping the points in the phase plane plot (in the
+notebook version, or on
+\href{http://www.clawpack.org/riemann_book/phase_plane/acoustics_small.html}{this
+webpage}).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{IFrame}\PY{p}{(}\PY{n}{src}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase\PYZus{}plane/acoustics\PYZus{}small\PYZus{}notitle.html}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+       \PY{n}{width}\PY{o}{=}\PY{l+m+mi}{980}\PY{p}{,} \PY{n}{height}\PY{o}{=}\PY{l+m+mi}{340}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<IPython.lib.display.IFrame at 0x7fa3748f3780>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{gaussian-initial-condition}{%
+\subsubsection{Gaussian initial
+condition}\label{gaussian-initial-condition}}
+
+In this example, we use the first example described near the beginning
+of this chapter. The initial condition is a Gaussian pressure
+perturbation, while the initial velocity is zero. Reflecting boundary
+conditions are imposed at \(x=-2\) and \(x=2\), so the wave is fully
+reflected back, and we can see how it interacts with itself. This
+animation is produced using a numerical method from
+\href{http://www.clawpack.org/pyclaw/}{PyClaw}, and can be viewed in the
+interactive notebook or on
+\href{http://www.clawpack.org/riemann_book/html/acoustics_bump_animation.html}{this
+webpage}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{anim} \PY{o}{=} \PY{n}{acoustics\PYZus{}demos}\PY{o}{.}\PY{n}{bump\PYZus{}animation}\PY{p}{(}\PY{n}{numframes} \PY{o}{=} \PY{l+m+mi}{50}\PY{p}{)}
+\PY{n}{HTML}\PY{p}{(}\PY{n}{anim}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<IPython.core.display.HTML object>
+\end{Verbatim}
+\end{tcolorbox}
+        
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
