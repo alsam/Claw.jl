@@ -1,0 +1,1164 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Euler}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{the-euler-equations-of-gas-dynamics}{%
+\section{The Euler equations of gas
+dynamics}\label{the-euler-equations-of-gas-dynamics}}
+
+    In this notebook, we discuss the equations and the structure of the
+exact solution to the Riemann problem. In
+\href{Euler_approximate.ipynb}{Euler\_approximate} and
+\href{FV_compare.ipynb}{FV\_compare}, we will investigate approximate
+Riemann solvers.
+
+    \hypertarget{fluid-dynamics}{%
+\subsection{Fluid dynamics}\label{fluid-dynamics}}
+
+    In this chapter we study the system of hyperbolic PDEs that governs the
+motions of a compressible gas in the absence of viscosity. These consist
+of conservation laws for \emph{mass, momentum}, and \emph{energy}.
+Together, they are referred to as the \emph{compressible Euler
+equations}, or simply the Euler equations. Our discussion here is fairly
+brief; for much more detail see \cite{fvmhp} or \cite{toro2013riemann}.
+
+    \hypertarget{mass-conservation}{%
+\subsubsection{Mass conservation}\label{mass-conservation}}
+
+    We will use \(\rho(x,t)\) to denote the fluid density and \(u(x,t)\) for
+its velocity. Then the equation for conservation of mass is just the
+familiar \emph{continuity equation}:
+
+\[\rho_t + (\rho u)_x = 0.\]
+
+    \hypertarget{momentum-conservation}{%
+\subsubsection{Momentum conservation}\label{momentum-conservation}}
+
+    We discussed the conservation of momentum in a fluid already in
+\href{Acoustics.ipynb}{Acoustics}. For convenience, we review the ideas
+here. The momentum density is given by the product of mass density and
+velocity, \(\rho u\). The momentum flux has two components. First, the
+momentum is transported in the same way that the density is; this flux
+is given by the momentum density times the velocity: \(\rho u^2\).
+
+To understand the second term in the momentum flux, we must realize that
+a fluid is made up of many tiny molecules. The density and velocity we
+are modeling are average values over some small region of space. The
+individual molecules in that region are not all moving with exactly
+velocity \(u\); that's just their average. Each molecule also has some
+additional random velocity component. These random velocities are what
+accounts for the \emph{pressure} of the fluid, which we'll denote by
+\(p\). These velocity components also lead to a net flux of momentum.
+Thus the momentum conservation equation is
+
+\[(\rho u)_t + (\rho u^2 + p)_x = 0.\]
+
+This is very similar to the conservation of momentum equation in the
+shallow water equations, as discussed in
+\href{Shallow_water.ipynb}{Shallow\_water}, in which case \(hu\) is the
+momentum density and \(\frac 1 2 gh^2\) is the hydrostatic pressure. For
+gas dynamics, a different expression must be used to compute the
+pressure \(p\) from the conserved quantities. This relation is called
+the \emph{equation of state} of the gas, as discussed further below.
+
+    \hypertarget{energy-conservation}{%
+\subsubsection{Energy conservation}\label{energy-conservation}}
+
+    The energy has two components: internal energy density \(\rho e\) and
+kinetic energy density \(\rho u^2/2\):
+
+\[E = \rho e + \frac{1}{2}\rho u^2.\]
+
+Like the momentum flux, the energy flux involves both bulk transport
+(\(Eu\)) and transport due to pressure (\(pu\)):
+
+\[E_t + (u(E+p)) = 0.\]
+
+    \hypertarget{equation-of-state}{%
+\subsubsection{Equation of state}\label{equation-of-state}}
+
+    You may have noticed that we have 4 unknowns (density, momentum, energy,
+and pressure) but only 3 conservation laws. We need one more relation to
+close the system. That relation, known as the equation of state,
+expresses how the pressure is related to the other quantities. We'll
+focus on the case of a polytropic ideal gas, for which
+
+\[p = \rho e (\gamma-1).\]
+
+Here \(\gamma\) is the ratio of specific heats, which for air is
+approximately 1.4.
+
+    \hypertarget{hyperbolic-structure-of-the-1d-euler-equations}{%
+\subsection{Hyperbolic structure of the 1D Euler
+equations}\label{hyperbolic-structure-of-the-1d-euler-equations}}
+
+    We can write the three conservation laws as a single system
+\(q_t + f(q)_x = 0\) by defining\\
+\begin{align}
+q & = \begin{pmatrix} \rho \\ \rho u \\ E\end{pmatrix}, & 
+f(q) & = \begin{pmatrix} \rho u \\ \rho u^2 + p \\ u(E+p)\end{pmatrix}.
+\label{euler_conserved}
+\end{align}\\
+These are the one-dimensional Euler system. As usual, one can define the
+\(3 \times 3\) Jacobian matrix by differentiating this flux function
+with respect to the three components of \(q\).
+
+    In our discussion of the structure of these equations, it is convenient
+to work with the primitive variables \((\rho, u, p)\) rather than the
+conserved variables. The quasilinear form is particularly simple in the
+primitive variables:
+
+\begin{align} \label{euler_primitive}
+\begin{bmatrix} \rho \\ u \\ p \end{bmatrix}_t + 
+\begin{bmatrix} u & \rho & 0 \\ 0 & u & 1/\rho \\ 0 & \gamma \rho & u \end{bmatrix} \begin{bmatrix} \rho \\ u \\ p \end{bmatrix}_x & = 0.
+\end{align}
+
+    \hypertarget{characteristic-velocities}{%
+\subsubsection{Characteristic
+velocities}\label{characteristic-velocities}}
+
+The eigenvalues of the flux Jacobian \(f'(q)\) for the 1D Euler
+equations are:
+
+\begin{align}
+\lambda_1 & = u-c & \lambda_2 & = u & \lambda_3 & = u+c
+\end{align}
+
+Here \(c\) is the sound speed:
+
+\[ c = \sqrt{\frac{\gamma p}{\rho}}.\]
+
+These are also the eigenvalues of the coefficient matrix appearing in
+(\ref{euler_primitive}), and show that acoustic waves propagate at
+speeds \(\pm c\) relative to the fluid velocity \(u\). There is also a
+characteristic speed \(\lambda_2 =u\) corresponding to the transport of
+entropy at the fluid velocity, as discussed further below.
+
+The eigenvectors of the coefficient matrix appearing in
+(\ref{euler_primitive}) are:
+
+\begin{align}\label{euler_evecs}
+r_1 & = \begin{bmatrix} -\rho/c \\ 1 \\ - \rho c \end{bmatrix} &
+r_2 & = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} &
+r_3 & = \begin{bmatrix}  \rho/c \\ 1 \\ \rho c \end{bmatrix}.
+\end{align}
+
+These vectors show the relation between jumps in the primitive variables
+across waves in each family. The eigenvectors of the flux Jacobian
+\(f'(q)\) arising from the conservative form (\ref{euler_conserved})
+would be different, and would give the relation between jumps in the
+conserved variables across each wave.
+
+Notice that the second characteristic speed, \(\lambda_2\), depends only
+on \(u\) and that \(u\) does not change as we move in the direction of
+\(r_2\). In other words, the 2-characteristic velocity is constant on
+2-integral curves. This is similar to the wave that carries changes in
+the tracer that we considered in
+\href{Shallow_tracer.ipynb}{Shallow\_tracer}. We say this characteristic
+field is \emph{linearly degenerate}; it admits neither shocks nor
+rarefactions. In a simple 2-wave, all characteristics are parallel. A
+jump in this family carries a change only in the density, and is
+referred to as a \emph{contact discontinuity}.
+
+Mathematically, the \(p\)th field is linearly degenerate if
+\begin{align}\label{lindegen}
+\nabla \lambda_p(q) \cdot r_p(q) = 0,
+\end{align} since in this case the eigenvalue \(\lambda_p(q)\) does not
+vary in the direction of the eigenvector \(r_p(q)\), and hence is
+constant along integral curves of this family. (Recall that \(r_p(q)\)
+is the tangent vector at each point on the integral curve.)
+
+The other two fields have characteristic velocities that \emph{do} vary
+along the corresponding integral curves. Moreover they vary in a
+monotonic manner as we move along an integral curve, always increasing
+as we move in one direction, decreasing in the other. Mathematically,
+this means that \begin{align}\label{gennonlin}
+\nabla \lambda_p(q) \cdot r_p(q) \ne 0
+\end{align} as \(q\) varies, so that the directional derivative of
+\(\lambda_p(q)\) cannot change sign as we move along the curve. This is
+analogous to the flux for a scalar problem being convex, and means that
+the 1-wave and the 3-wave in any Riemann solution to the Euler equations
+will be a single shock or rarefaction wave, not the sort of compound
+waves we observed in \href{Nonconvex_scalar.ipynb}{Nonconvex\_scalar} in
+the nonconvex scalar case. Any characteristic field satisfying
+(\ref{gennonlin}) is said to be \emph{genuinely nonlinear}.
+
+    \hypertarget{entropy}{%
+\subsubsection{Entropy}\label{entropy}}
+
+Another important quantity in gas dynamics is the \emph{specific
+entropy}:
+
+\[ s = c_v \log(p/\rho^\gamma) + C,\]
+
+where \(c_v\) and \(C\) are constants. From the expression
+(\ref{euler_evecs}) for the eigenvector \(r_2\), we see that the
+pressure and velocity are constant across a 2-wave. A simple 2-wave is
+also called an \emph{entropy wave} because a variation in density while
+the pressure remains constant requires a variation in the entropy of the
+gas as well. On the other hand a simple acoustic wave (a continuously
+varying pure 1-wave or 3-wave) has constant entropy throughout the wave;
+the specific entropy is a Riemann invariant for these families.
+
+A shock wave (either a 1-wave or 3-wave) satisfies the Rankine-Hugoniot
+conditions and exhibits a jump in entropy. To be physically correct, the
+entropy of the gas must \emph{increase} as gas molecules pass through
+the shock, leading to the \emph{entropy condition} for selecting shock
+waves. We have already seen this term used in the context of scalar
+nonlinear equations shallow water flow, even though the entropy
+condition in those cases did not involve the physical entropy.
+
+    \hypertarget{riemann-invariants}{%
+\subsubsection{Riemann invariants}\label{riemann-invariants}}
+
+Since the Euler equations have three components, we expect each integral
+curve (a 1D set in 3D space) to be defined by two Riemann invariants.
+These are:
+
+\begin{align}
+1 & : s, u+\frac{2c}{\gamma-1} \\
+2 & : u, p \\
+3 & : s, u-\frac{2c}{\gamma-1}.
+\end{align}
+
+    \hypertarget{integral-curves}{%
+\subsubsection{Integral curves}\label{integral-curves}}
+
+The level sets of these Riemann invariants are two-dimensional surfaces;
+the intersection of two appropriate level sets defines an integral
+curve.
+
+The 2-integral curves, of course, are simply lines of constant pressure
+and velocity (with varying density). Since the field is linearly
+degenerate, these coincide with the Hugoniot loci. We can determine the
+form of the 1- and 3-integral curves using the Riemann invariants above.
+For a curve passing through \((\rho_0,u_0,p_0)\), we find
+
+\begin{align}
+    \rho(p) &= (p/p_0)^{1/\gamma} \rho_0,\\
+    u(p) & = u_0 \pm \frac{2c_0}{\gamma-1}\left(1-(p/p_0)^{(\gamma-1)/(2\gamma)}\right).
+\end{align} Here the plus sign is for 1-waves and the minus sign is for
+3-waves.
+
+Below we plot the projection of some integral curves on the \(p-u\)
+plane.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}}\PY{k}{config} InlineBackend.figure\PYZus{}format = \PYZsq{}svg\PYZsq{}
+\PY{k+kn}{from} \PY{n+nn}{exact\PYZus{}solvers} \PY{k+kn}{import} \PY{n}{euler}
+\PY{k+kn}{from} \PY{n+nn}{exact\PYZus{}solvers} \PY{k+kn}{import} \PY{n}{euler\PYZus{}demos}
+\PY{k+kn}{from} \PY{n+nn}{ipywidgets} \PY{k+kn}{import} \PY{n}{widgets}
+\PY{k+kn}{from} \PY{n+nn}{ipywidgets} \PY{k+kn}{import} \PY{n}{interact}
+\PY{n}{State} \PY{o}{=} \PY{n}{euler}\PY{o}{.}\PY{n}{Primitive\PYZus{}State}
+\PY{n}{gamma} \PY{o}{=} \PY{l+m+mf}{1.4}
+\end{Verbatim}
+\end{tcolorbox}
+
+    If you wish to examine the Python code for this chapter, see:
+
+\begin{itemize}
+\tightlist
+\item
+  \url{exact_solvers/euler.py} \ldots{}
+  \href{https://github.com/clawpack/riemann_book/blob/FA16/exact_solvers/euler.py}{on
+  github,}
+\item
+  \url{exact_solvers/euler_demos.py} \ldots{}
+  \href{https://github.com/clawpack/riemann_book/blob/FA16/exact_solvers/euler_demos.py}{on
+  github.}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{interact}\PY{p}{(}\PY{n}{euler}\PY{o}{.}\PY{n}{plot\PYZus{}integral\PYZus{}curves}\PY{p}{,}
+         \PY{n}{gamma}\PY{o}{=}\PY{n}{widgets}\PY{o}{.}\PY{n}{FloatSlider}\PY{p}{(}\PY{n+nb}{min}\PY{o}{=}\PY{l+m+mf}{1.1}\PY{p}{,}\PY{n+nb}{max}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{value}\PY{o}{=}\PY{l+m+mf}{1.4}\PY{p}{)}\PY{p}{,}
+         \PY{n}{rho\PYZus{}0}\PY{o}{=}\PY{n}{widgets}\PY{o}{.}\PY{n}{FloatSlider}\PY{p}{(}\PY{n+nb}{min}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,}\PY{n+nb}{max}\PY{o}{=}\PY{l+m+mf}{3.}\PY{p}{,}\PY{n}{value}\PY{o}{=}\PY{l+m+mf}{1.}\PY{p}{,} 
+                                   \PY{n}{description}\PY{o}{=}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{rho\PYZus{}0\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(Checkbox(value=True, description='plot\_1'), Checkbox(value=False, description='plot\_3'),…
+    \end{Verbatim}
+
+    
+    \hypertarget{rankine-hugoniot-jump-conditions}{%
+\subsection{Rankine-Hugoniot jump
+conditions}\label{rankine-hugoniot-jump-conditions}}
+
+The Hugoniot loci for 1- and 3-shocks are \begin{align}
+    \rho(p) &= \left(\frac{1 + \beta p/p_0}{p/p_\ell + \beta} \right),\\
+    u(p) & = u_0 \pm \frac{2c_0}{\sqrt{2\gamma(\gamma-1)}} 
+        \left(\frac{1-p/p_0}{\sqrt{1+\beta p/p_0}}\right), \\
+\end{align} where \(\beta = (\gamma+1)/(\gamma-1)\). Here the plus sign
+is for 1-shocks and the minus sign is for 3-shocks.
+
+Below we plot the projection of some Hugoniot loci on the \(p-u\) plane.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{interact}\PY{p}{(}\PY{n}{euler}\PY{o}{.}\PY{n}{plot\PYZus{}hugoniot\PYZus{}loci}\PY{p}{,}
+         \PY{n}{gamma}\PY{o}{=}\PY{n}{widgets}\PY{o}{.}\PY{n}{FloatSlider}\PY{p}{(}\PY{n+nb}{min}\PY{o}{=}\PY{l+m+mf}{1.1}\PY{p}{,}\PY{n+nb}{max}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{value}\PY{o}{=}\PY{l+m+mf}{1.4}\PY{p}{)}\PY{p}{,}
+         \PY{n}{rho\PYZus{}0}\PY{o}{=}\PY{n}{widgets}\PY{o}{.}\PY{n}{FloatSlider}\PY{p}{(}\PY{n+nb}{min}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,}\PY{n+nb}{max}\PY{o}{=}\PY{l+m+mf}{3.}\PY{p}{,}\PY{n}{value}\PY{o}{=}\PY{l+m+mf}{1.}\PY{p}{,} 
+                                   \PY{n}{description}\PY{o}{=}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{rho\PYZus{}0\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(Checkbox(value=True, description='plot\_1'), Checkbox(value=False, description='plot\_3'),…
+    \end{Verbatim}
+
+    
+    \hypertarget{entropy-condition}{%
+\subsubsection{Entropy condition}\label{entropy-condition}}
+
+As mentioned above, a shock wave is physically relevant only if the
+entropy of the gas increases as the gas particles move through the
+shock. A discontinuity satisfying the Rankine-Hugoniot jump conditions
+that violates this entropy condition (an ``entropy-violating shock'') is
+not physically correct and should be replaced by a rarefaction wave in
+the Riemann solution.
+
+This physical entropy condition is equivalent to the mathematical
+condition that for a 1-shock to be physically relevant, the
+1-characteristics must impinge on the shock (the Lax entropy condition).
+If the entropy condition is violated, the 1-characteristics would spread
+out, allowing the insertion of an expansion fan (rarefaction wave).
+
+    \hypertarget{exact-solution-of-the-riemann-problem}{%
+\subsection{Exact solution of the Riemann
+problem}\label{exact-solution-of-the-riemann-problem}}
+
+The general Riemann solution is found following the steps listed below.
+This is essentially the same procedure used to determine the correct
+solution to the Riemann problem for the shallow water equations in
+\href{Shallow_water.ipynb}{Shallow\_water}, where more details are
+given.
+
+The Euler equations are a system of three equations and the general
+Riemann solution consists of three waves, so we must determine two
+intermediate states rather than the one intermediate state in the
+shallow water equations. However, it is nearly as simple because of the
+fact that we know the pressure and velocity are constant across the
+2-wave, and so there is a single intermediate pressure \(p_m\) and
+velocity \(u_m\) in both intermediate states, and it is only the density
+that takes different values \(\rho_{m1}\) and \(\rho_{m2}\). Moreover
+any jump in density is allowed across the 2-wave, and we have
+expressions given above for how \(u(p)\) varies along any integral curve
+or Hugoniot locus, expressions that do not explicitly involve \(\rho\).
+So we can determine the intermediate \(p_m\) by finding the intersection
+point of two relevant curves, in step 3 of this general algorithm:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Define a piecewise function giving the middle state velocity \(u_m\)
+  that can be connected to the left state by an entropy-satisfying shock
+  or rarefaction, as a function of the middle-state pressure \(p_m\).
+\item
+  Define a piecewise function giving the middle state velocity \(u_m\)
+  that can be connected to the right state by an entropy-satisfying
+  shock or rarefaction, as a function of the middle-state pressure
+  \(p_m\).
+\item
+  Use a nonlinear rootfinder to find the intersection of the two
+  functions defined above.
+\item
+  Use the Riemann invariants to find the intermediate state densities
+  and the solution structure inside any rarefaction waves.
+\end{enumerate}
+
+    Step 4 above requires finding the structure of rarefaction waves. This
+can be done using the the fact that the Riemann invariants are constant
+through the rarefaction wave. See Chapter 14 of \cite{fvmhp} for more
+details.
+
+    \hypertarget{examples-of-riemann-solutions}{%
+\subsection{Examples of Riemann
+solutions}\label{examples-of-riemann-solutions}}
+
+Here we present some representative examples of Riemann problems and
+solutions. The examples chosen are closely related to the examples used
+in \href{Shallow_water.ipynb}{Shallow\_water} and you might want to
+refer back to that notebook and compare the results.
+
+    \hypertarget{problem-1-sod-shock-tube}{%
+\subsubsection{Problem 1: Sod shock
+tube}\label{problem-1-sod-shock-tube}}
+
+First we consider the classic shock tube problem. The initial condition
+consists of high density and pressure on the left, low density and
+pressure on the right and zero velocity on both sides. The solution is
+composed of a shock propagating to the right (3-shock), while a
+left-going rarefaction forms (1-rarefaction). In between these two
+waves, there is a jump in the density, which is the contact
+discontinuity (2-wave) in the linearly degenerate characteristic field.
+
+Note that this set of initial conditions is analogous to the ``dam
+break'' problem for shallow water quations, and the resulting structure
+of the solution is very similar to that obtained when those equations
+are solved with the addition of a scalar tracer. However, in the Euler
+equations the entropy jump across a 2-wave does affect the fluid
+dynamics on either side, so this is not a passive tracer and solving the
+Riemann problem is slightly more complex.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{left\PYZus{}state}  \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{3.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{0.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{3.}\PY{p}{)}
+\PY{n}{right\PYZus{}state} \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{0.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+
+\PY{n}{euler}\PY{o}{.}\PY{n}{riemann\PYZus{}solution}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,}\PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(FloatSlider(value=0.5, description='t', max=0.9), Dropdown(description='Show characteris…
+    \end{Verbatim}
+
+    
+    Here is a plot of the solution in the phase plane, showing the integral
+curve connecting the left and middle states, and the Hugoniot locus
+connecting the middle and right states.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euler}\PY{o}{.}\PY{n}{phase\PYZus{}plane\PYZus{}plot}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,} \PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Euler_files/Euler_32_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{problem-2-symmetric-expansion}{%
+\subsubsection{Problem 2: Symmetric
+expansion}\label{problem-2-symmetric-expansion}}
+
+Next we consider the case of equal densities and pressures, and equal
+and opposite velocities, with the initial states moving away from each
+other. The result is two rarefaction waves (the contact has zero
+strength).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{left\PYZus{}state}  \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{3.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+\PY{n}{right\PYZus{}state} \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{3.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+
+\PY{n}{euler}\PY{o}{.}\PY{n}{riemann\PYZus{}solution}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,}\PY{n}{right\PYZus{}state}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(FloatSlider(value=0.5, description='t', max=0.9), Dropdown(description='Show characteris…
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euler}\PY{o}{.}\PY{n}{phase\PYZus{}plane\PYZus{}plot}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,} \PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Euler_files/Euler_35_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{problem-3-colliding-flows}{%
+\subsubsection{Problem 3: Colliding
+flows}\label{problem-3-colliding-flows}}
+
+Next, consider the case in which the left and right states are moving
+toward each other. This leads to a pair of shocks, with a high-density,
+high-pressure state in between.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{left\PYZus{}state}  \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{3.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+\PY{n}{right\PYZus{}state} \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{3.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+
+\PY{n}{euler}\PY{o}{.}\PY{n}{riemann\PYZus{}solution}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,}\PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(FloatSlider(value=0.5, description='t', max=0.9), Dropdown(description='Show characteris…
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euler}\PY{o}{.}\PY{n}{phase\PYZus{}plane\PYZus{}plot}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,} \PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Euler_files/Euler_38_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{plot-particle-trajectories}{%
+\subsection{Plot particle
+trajectories}\label{plot-particle-trajectories}}
+
+In the next plot of the Riemann solution in the \(x\)-\(t\) plane, we
+also plot the trajectories of a set of particles initially distributed
+along the \(x\) axis at \(t=0\), with the spacing inversely proportional
+to the density. The evolution of the distance between particles gives an
+indication of how the density changes.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{left\PYZus{}state}  \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{3.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{0.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{3.}\PY{p}{)}
+\PY{n}{right\PYZus{}state} \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{0.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+
+\PY{n}{euler}\PY{o}{.}\PY{n}{plot\PYZus{}riemann\PYZus{}trajectories}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,} \PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Euler_files/Euler_40_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Since the distance between particles in the above plot is inversely
+proportional to density, we see that the density around a particle
+increases as it goes through the shock wave but decreases through the
+rarefaction wave, and that in general there is a jump in density across
+the contact discontinuity, which lies along the particle trajectory
+emanating from \(x=0\) at \(t=0\).
+
+    \hypertarget{riemann-solution-with-a-colored-tracer}{%
+\subsection{Riemann solution with a colored
+tracer}\label{riemann-solution-with-a-colored-tracer}}
+
+Next we plot the Riemann solution with the density plot also showing an
+advected color to help visualize the flow better. The fluid initially to
+the left of \(x=0\) is colored red and that initially to the right of
+\(x=0\) is colored blue, with stripes of different shades of these
+colors to help visualize the motion of the fluid.
+
+    Let's plot the Sod shock tube data with this colored tracer:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}with\PYZus{}stripes\PYZus{}t\PYZus{}slider}\PY{p}{(}\PY{n}{t}\PY{p}{)}\PY{p}{:}
+    \PY{n}{euler\PYZus{}demos}\PY{o}{.}\PY{n}{plot\PYZus{}with\PYZus{}stripes}\PY{p}{(}\PY{n}{rho\PYZus{}l}\PY{o}{=}\PY{l+m+mf}{3.}\PY{p}{,}\PY{n}{u\PYZus{}l}\PY{o}{=}\PY{l+m+mf}{0.}\PY{p}{,}\PY{n}{p\PYZus{}l}\PY{o}{=}\PY{l+m+mf}{3.}\PY{p}{,}
+                                  \PY{n}{rho\PYZus{}r}\PY{o}{=}\PY{l+m+mf}{1.}\PY{p}{,}\PY{n}{u\PYZus{}r}\PY{o}{=}\PY{l+m+mf}{0.}\PY{p}{,}\PY{n}{p\PYZus{}r}\PY{o}{=}\PY{l+m+mf}{1.}\PY{p}{,}
+                                  \PY{n}{gamma}\PY{o}{=}\PY{n}{gamma}\PY{p}{,}\PY{n}{t}\PY{o}{=}\PY{n}{t}\PY{p}{)}
+    
+\PY{n}{interact}\PY{p}{(}\PY{n}{plot\PYZus{}with\PYZus{}stripes\PYZus{}t\PYZus{}slider}\PY{p}{,} 
+         \PY{n}{t}\PY{o}{=}\PY{n}{widgets}\PY{o}{.}\PY{n}{FloatSlider}\PY{p}{(}\PY{n+nb}{min}\PY{o}{=}\PY{l+m+mf}{0.}\PY{p}{,}\PY{n+nb}{max}\PY{o}{=}\PY{l+m+mf}{1.}\PY{p}{,}\PY{n}{step}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,}\PY{n}{value}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(FloatSlider(value=0.5, description='t', max=1.0), Output()), \_dom\_classes=('widget-inter…
+    \end{Verbatim}
+
+    
+    Note the following in the figure above:
+
+\begin{itemize}
+\tightlist
+\item
+  The edges of each stripe are being advected with the fluid velocity,
+  so you can visualize how the fluid is moving.
+\item
+  The width of each stripe initially is inversely proportional to the
+  density of the fluid, so that the total mass of gas within each stripe
+  is the same.
+\item
+  The total mass within each stripe remains constant as the flow
+  evolves, and the width of each stripe remains inversely proportional
+  to the local density.
+\item
+  The interface between the red and blue gas moves with the contact
+  discontinuity. The velocity and pressure are constant but the density
+  can vary across this wave.
+\end{itemize}
+
+    \hypertarget{interactive-riemann-solver}{%
+\subsection{Interactive Riemann
+solver}\label{interactive-riemann-solver}}
+
+The initial configuration specified below gives a rather different
+looking solution than when using initial conditions of Sod, but with the
+same mathematical structure. \emph{In the live notebook, you can easily
+adjust the initial data and immediately see the resulting solution.}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euler\PYZus{}demos}\PY{o}{.}\PY{n}{euler\PYZus{}demo1}\PY{p}{(}\PY{n}{rho\PYZus{}l}\PY{o}{=}\PY{l+m+mf}{2.}\PY{p}{,}\PY{n}{u\PYZus{}l}\PY{o}{=}\PY{l+m+mf}{0.}\PY{p}{,}\PY{n}{p\PYZus{}l}\PY{o}{=}\PY{l+m+mf}{2.5}\PY{p}{,}
+                        \PY{n}{rho\PYZus{}r}\PY{o}{=}\PY{l+m+mf}{3.}\PY{p}{,}\PY{n}{u\PYZus{}r}\PY{o}{=}\PY{l+m+mf}{0.}\PY{p}{,}\PY{n}{p\PYZus{}r}\PY{o}{=}\PY{l+m+mf}{5.}\PY{p}{,} \PY{n}{gamma}\PY{o}{=}\PY{n}{gamma}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(FloatSlider(value=2.0, description='\$\textbackslash{}\textbackslash{}rho\_l\$', max=10.0, min=1.0), FloatSlider(value=0.…
+    \end{Verbatim}
+
+    
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+VBox(children=(HBox(children=(FloatSlider(value=2.0, description='\$\textbackslash{}\textbackslash{}rho\_l\$', max=10.0, min=1.0), FloatSlider(…
+    \end{Verbatim}
+
+    
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Output()
+    \end{Verbatim}
+
+    
+    \hypertarget{riemann-problems-with-vacuum}{%
+\subsection{Riemann problems with
+vacuum}\label{riemann-problems-with-vacuum}}
+
+A vacuum state (with zero pressure and density) in the Euler equations
+is similar to a dry state (with depth \(h=0\)) in the shallow water
+equations. It can arise in the solution of the Riemann problem in two
+ways:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  An initial left or right vacuum state: in this case the Riemann
+  solution consists of a single rarefaction, connecting the non-vacuum
+  state to vacuum.
+\item
+  A problem where the left and right states are not vacuum but middle
+  states are vacuum. Since this means the middle pressure is smaller
+  than that to the left or right, this can occur only if the 1- and
+  3-waves are both rarefactions. These rarefactions are precisely those
+  required to connect the left and right states to the middle vacuum
+  state.
+\end{enumerate}
+
+    \hypertarget{initial-vacuum-state}{%
+\subsubsection{Initial vacuum state}\label{initial-vacuum-state}}
+
+Next we start with the density and pressure set to 0 in the left state.
+The velocity plot looks a bit strange, but note that the velocity is
+undefined in vacuum. The solution structure consists of a rarefaction
+wave, similar to what is observed in the analogous case of a dam break
+problem with dry land on one side (depth \(=0\)), as discussed in
+\href{Shallow_water.ipynb}{Shallow\_water}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{left\PYZus{}state}  \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=}\PY{l+m+mf}{0.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{0.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{0.}\PY{p}{)}
+\PY{n}{right\PYZus{}state} \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{3.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+
+\PY{n}{euler}\PY{o}{.}\PY{n}{riemann\PYZus{}solution}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,}\PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(FloatSlider(value=0.5, description='t', max=0.9), Dropdown(description='Show characteris…
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euler}\PY{o}{.}\PY{n}{phase\PYZus{}plane\PYZus{}plot}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,} \PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Euler_files/Euler_51_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The phase plane plot may look odd, but recall that in the vacuum state
+velocity is undefined, and since \(p_\ell = p_m = 0\), the left and
+middle states are actually the same.
+
+    \hypertarget{middle-vacuum-state}{%
+\subsubsection{Middle vacuum state}\label{middle-vacuum-state}}
+
+Finally, we consider an example where there is sufficiently strong
+outflow (\(u_\ell<0\) and \(u_r>0\)) that a vacuum state forms,
+analogous to the dry state that appears in the similar example in
+\href{Shallow_water.ipynb}{Shallow\_water}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{left\PYZus{}state}  \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=}\PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{10.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+\PY{n}{right\PYZus{}state} \PY{o}{=} \PY{n}{State}\PY{p}{(}\PY{n}{Density} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{,}
+                    \PY{n}{Velocity} \PY{o}{=} \PY{l+m+mf}{10.}\PY{p}{,}
+                    \PY{n}{Pressure} \PY{o}{=} \PY{l+m+mf}{1.}\PY{p}{)}
+
+\PY{n}{euler}\PY{o}{.}\PY{n}{riemann\PYZus{}solution}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,}\PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+interactive(children=(FloatSlider(value=0.5, description='t', max=0.9), Dropdown(description='Show characteris…
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euler}\PY{o}{.}\PY{n}{phase\PYZus{}plane\PYZus{}plot}\PY{p}{(}\PY{n}{left\PYZus{}state}\PY{p}{,} \PY{n}{right\PYZus{}state}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Euler_files/Euler_55_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Again the phase plane plot may look odd, but since the velocity is
+undefined in the vacuum state the middle state with \(p_m = 0\) actually
+connects to both integral curves, which correspond to the two outgoing
+rarefaction waves.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
